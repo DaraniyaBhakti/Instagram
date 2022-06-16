@@ -4,7 +4,6 @@ import { View, Button, TextInput } from 'react-native'
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-// const auth = getAuth();
 export default function LoginScreen() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -12,7 +11,9 @@ export default function LoginScreen() {
 
     function onLogin(){
         signInWithEmailAndPassword(auth, email, password)
-            .then((result) => {console.log(result) })
+            .then((result) =>{
+                // console.log(result) 
+            } )
             .catch((error) => console.log(error))
     }
     return (

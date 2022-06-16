@@ -12,12 +12,6 @@ export default function RegisterScreen() {
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
     
-    // const createUser = async (userid) => {
-    //     await setDoc(doc(database, 'users', userid),{
-    //         email,
-    //         name
-    //     });
-    // };
     function onSignUp(){
         createUserWithEmailAndPassword(auth, email, password)
             .then((result) => {
@@ -26,13 +20,7 @@ export default function RegisterScreen() {
                     email: email,
                    
                   });
-                // createUser(auth.currentUser)
-                // console.log(auth.currentUser.uid)
-                // database.collection("users")
-                //     .doc(auth.currentUser.uid)
-                //     .set({
-                //         name,email
-                //     })
+                
                 // console.log(result)
              })
             .catch((error) => console.log(error))
