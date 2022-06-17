@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import { View, Text } from 'react-native';
 
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './src/config/firebase';
@@ -17,6 +17,7 @@ import RegisterScreen from './src/auth/RegisterScreen';
 import LoginScreen from './src/auth/LoginScreen';
 import MainScreen from './src/screens/MainScreen';
 import Add from './src/screens/main/Add';
+import Save from './src/screens/main/Save';
 
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -26,7 +27,7 @@ const Stack = createNativeStackNavigator();
 
 export class App extends Component {
   constructor(props) {
-    super(props)
+    super()
     this.state = {
       loaded: false,
     }
@@ -46,19 +47,7 @@ export class App extends Component {
             })
           }
           })
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   if (!user) {
-    //     this.setState({
-    //       loggedIn: false,
-    //       loaded: true,
-    //     })
-    //   } else {
-    //     this.setState({
-    //       loggedIn: true,
-    //       loaded: true,
-    //     })
-    //   }
-    // })
+    
   }
   render() {
     const { loggedIn, loaded } = this.state;
@@ -84,66 +73,14 @@ export class App extends Component {
 
     return (
       <Provider store={store}>
-        {/* <MainScreen /> */}
         <NavigationContainer >
           <Stack.Navigator initialRouteName="Main">
             <Stack.Screen name="Main" component={MainScreen}  options={{ headerShown: false }} />
-            <Stack.Screen name="Add" component={Add} />
+            <Stack.Screen name="Add" component={Add} navigation={this.props.navigation}/>
+            <Stack.Screen name="Save" component={Save} navigation={this.props.navigation}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
     )
   }
 }
-
-export default App
-// export default function App() {
-
-//   const [isLoaded, setIsLoaded] = useState(false)
-
-//   useEffect(() => {
-//     onAuthStateChanged(auth, (user) => {
-//       if (!user) {
-//         setIsLoggedIn(false),
-//           setIsLoaded(true)
-//       } else {
-//         setIsLoggedIn(true),
-//           setIsLoaded(true)
-//       }
-//     })
-//   })
-
-//   const [isLoggedIn, setIsLoggedIn] = useState()
-//   if (!isLoaded) {
-//     return (
-//       <View>
-//         <Text>Loading</Text>
-//       </View>
-//     )
-//   }
-//   if (!isLoggedIn) {
-//     return (
-//       <NavigationContainer>
-//         <Stack.Navigator initialRouteName='Landing'>
-//           <Stack.Screen name='Landing' component={LandingScreen} options={{ headerShown: false }} />
-//           <Stack.Screen name='Register' component={RegisterScreen} />
-//           <Stack.Screen name='Login' component={LoginScreen} />
-//         </Stack.Navigator>
-//       </NavigationContainer>
-//     );
-//   }
-//   return (
-//     <Provider store={store}>
-//       <MainScreen />
-//     </Provider>
-//   )
-// }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

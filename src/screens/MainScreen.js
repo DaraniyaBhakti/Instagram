@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchUser } from '../redux/actions/index';
+import { fetchUser,fetchUserPosts } from '../redux/actions/index';
 
 import Feed from './main/Feed';
 import  Profile from './main/Profile';
@@ -21,18 +20,10 @@ export class  MainScreen extends Component {
 
   componentDidMount(){
     this.props.fetchUser();
+    this.props.fetchUserPosts();
   }
   render(){
-  // const {currentUser} = this.props;  
-  // if(currentUser == undefined){
-  //   return(
-  //     <View></View>
-  //   )
-  // }
   return(
-    // <View style={{flex:1, justifyContent:'center',,alignItems:'center'}}>
-    //   <Text>{currentUser.name} is logged in</Text>
-    // </View>
     <Tab.Navigator initialRouteName="Feed" labeled={false}>
                 <Tab.Screen name="Feed" component={Feed}
                     options={{
@@ -67,8 +58,7 @@ export class  MainScreen extends Component {
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser
 })
-// const mapDispatchProps = (dispatch) => bindActionCreators({fetchUser}, dispatch);
 
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(MainScreen);
