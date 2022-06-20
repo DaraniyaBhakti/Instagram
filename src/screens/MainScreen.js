@@ -5,10 +5,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchUser,fetchUserPosts } from '../redux/actions/index';
+import { fetchUser,fetchUserPosts, fetchUserFollowing, clearData } from '../redux/actions/index';
+import {auth} from '../config/firebase';
 
 import Feed from './main/Feed';
-import  Profile from './main/Profile';
+import Profile from './main/Profile';
+import Search from './main/Search'
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -16,11 +18,13 @@ const EmptyScreen = () => {
     return (null)
 }
 
-export class  MainScreen extends Component {
+class  MainScreen extends Component {
 
   componentDidMount(){
     this.props.fetchUser();
     this.props.fetchUserPosts();
+    this.props.fetchUserFollowing();
+    this.props.clearData();
   }
   render(){
   return(
@@ -29,6 +33,12 @@ export class  MainScreen extends Component {
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="home" color={color} size={26} />
+                        ),
+                    }} />
+                    <Tab.Screen name="Search" component={Search} navigation={this.props.navigation}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="magnify" color={color} size={26} />
                         ),
                     }} />
                 <Tab.Screen name="AddContainer" component={EmptyScreen}
@@ -43,7 +53,12 @@ export class  MainScreen extends Component {
                             <MaterialCommunityIcons name="plus-box" color={color} size={26} />
                         ),
                     }} />
-                <Tab.Screen name="Profile" component={Profile}
+                 <Tab.Screen name="Profile" component={Profile} 
+                listeners={({ navigation }) => ({
+                    tabPress: event => {
+                        event.preventDefault();
+                        navigation.navigate("Profile", {uid: auth.currentUser.uid})
+                    }})}
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="account-circle" color={color} size={26} />
@@ -59,6 +74,6 @@ const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser
 })
 
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts }, dispatch);
+const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts, fetchUserFollowing, clearData}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(MainScreen);

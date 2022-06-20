@@ -13,6 +13,7 @@ const firebaseConfig = {
   messagingSenderId: Constants.manifest.extra.messagingSenderId,
   appId: Constants.manifest.extra.appId,
   databaseURL: Constants.manifest.extra.databaseURL,
+  measurementId:Constants.manifest.extra.measurementId,
   storageBucket: ''
 };
 
@@ -20,5 +21,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth();
-export const database = getFirestore(app);
+export const database = getFirestore(app); 
 export const storage = getStorage(app);
