@@ -35,7 +35,7 @@ class  MainScreen extends Component {
                             <MaterialCommunityIcons name="home" color={color} size={26} />
                         ),
                     }} />
-                    <Tab.Screen name="Search" component={Search} navigation={this.props.navigation}
+                <Tab.Screen name="Search" component={Search} navigation={this.props.navigation}
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="magnify" color={color} size={26} />

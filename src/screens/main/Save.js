@@ -2,56 +2,28 @@ import React, { useState } from 'react'
 import { View, TextInput, Image, Button } from 'react-native'
 
 import { auth, database, storage } from '../../config/firebase';
-import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { addDoc, collection, doc } from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
 
 export default function Save(props) {
     const [caption, setCaption] = useState("")
 
-    const uriToBlob = (uri) => {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-
-            xhr.onload = function () {
-                resolve(xhr.response);
-            }
-            xhr.onerror = function () {
-                reject(new Error('uriTOBlob failed'));
-            }
-            xhr.responseType = 'blob';
-            xhr.open('GET', uri, true);
-            xhr.send(null);
-        })
-    }
     const uploadImage = async () => {
 
         const uri = props.route.params.image;
         const childPath = `post/${auth.currentUser.uid}/${Math.random().toString(36)}`;
-        console.log(childPath)
-
 
         const response = await fetch(uri);
-        // console.log("response",JSON.stringify(response))
         const blob = await response.blob();
-        // console.log("blob",JSON.stringify(blob))
-
-
         const storageRef = ref(storage, childPath);
-
-        // console.log("storage",JSON.stringify(storageRef))
-
 
         // Upload the file and metadata
         const uploadTask = uploadBytesResumable(storageRef, blob);
-
-        // console.log(uploadTask.json());
-        uploadTask.on('state_changed',
+        uploadTask.on(
+            'state_changed',
             (snapshot) => {
-                // Observe state change events such as progress, pause, and resume
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+               const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 console.log('Upload is ' + progress + '% done');
-                // console.log(snapshot);
                 switch (snapshot.state) {
                     case 'paused':
                         console.log('Upload is paused');
@@ -62,9 +34,6 @@ export default function Save(props) {
                 }
             },
             (error) => {
-                // Handle unsuccessful uploads
-                // A full list of error codes is available at
-                // https://firebase.google.com/docs/storage/web/handle-errors
                 switch (error.code) {
                     case 'storage/unauthorized':
                         // User doesn't have permission to access the object
@@ -78,16 +47,14 @@ export default function Save(props) {
 
                     case 'storage/unknown':
                         // Unknown error occurred, inspect error.serverResponse
-                        console.log("Unknown error occurred, inspect error.serverResponse")
+                        console.log("Unknown error occurred, inspect error.serverResponse"+error)
                         break;
                     default:
                         { console.log("Error") }
                 }
             },
             () => {
-                // Handle successful uploads on complete
-                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     console.log('File available at', downloadURL);
                     savePostData(downloadURL)
                 });
@@ -97,12 +64,12 @@ export default function Save(props) {
 
     const savePostData = (downloadURL) => {
         const postRef = doc(database, "posts", auth.currentUser.uid)
-        const imageRef = collection(postRef, "userPosts",`${auth.currentUser.uid}/${Math.random().toString(36)}`);
-        // console.log(postRef)
+        const imageRef = collection(postRef, "userPosts");
+        
         addDoc(imageRef, {
             downloadURL,
             caption,
-            creation: database.FieldValue.serverTimestamp()
+            creation: serverTimestamp()
         }).then((function () {
             props.navigation.popToTop();
         }))

@@ -18,6 +18,7 @@ import LoginScreen from './src/auth/LoginScreen';
 import MainScreen from './src/screens/MainScreen';
 import Add from './src/screens/main/Add';
 import Save from './src/screens/main/Save';
+import Comments from './src/screens/main/Comments';
 
 
 const store = createStore(Reducers, applyMiddleware(thunk));
@@ -78,6 +79,7 @@ export class App extends Component {
             <Stack.Screen name="Main" component={MainScreen}/>
             <Stack.Screen name="Add" component={Add} navigation={this.props.navigation}/>
             <Stack.Screen name="Save" component={Save} navigation={this.props.navigation}/>
+            <Stack.Screen name="Comment" component={Comments} navigation={this.props.navigation}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Image, FlatList, Button } from 'react-native'
 import { connect } from 'react-redux'
 import { auth, database } from '../../config/firebase';
-import { doc, getDoc, query, orderBy, collection, setDoc ,deleteDoc} from "firebase/firestore";
+import { doc, getDoc, query, orderBy, collection, setDoc, deleteDoc, getDocs } from "firebase/firestore";
 
 function Profile(props) {
     const [userPosts, setUserPosts] = useState([]);
@@ -23,7 +23,7 @@ function Profile(props) {
 
             docSnap.then((snapshot) => {
                 if (snapshot.exists) {
-                    setUser(snapshot.data)
+                    setUser(snapshot.data())
                 } else {
                     console.log('user does not exists');
                 }
@@ -31,8 +31,8 @@ function Profile(props) {
 
             const postRef = doc(database, "posts", props.route.params.uid)
             const imageRef = collection(postRef, "userPosts");
-            const imageQuery = query(imageRef, orderBy("creation", "asc"));
-            const imageSnap = getDoc(imageQuery)
+            const imageQuery = query(imageRef, orderBy('creation', "asc"));
+            const imageSnap = getDocs(imageQuery)
 
             imageSnap.then((snapshot) => {
                 let posts = snapshot.docs.map(doc => {
@@ -44,7 +44,7 @@ function Profile(props) {
             })
         }
 
-        if (props.following.indexOf(props.route.params.uid) > -1) {
+        if(props.following.indexOf(props.route.params.uid) > -1) {
             setFollowing(true);
         } else {
             setFollowing(false);
@@ -57,14 +57,14 @@ function Profile(props) {
         const followingRef = doc(database, 'following', auth.currentUser.uid);
         const userFollowingRef = doc(followingRef, "userFollowing", props.route.params.uid);
 
-        setDoc(userFollowingRef,{})
+        setDoc(userFollowingRef, {})
     }
     const onUnfollow = () => {
 
-        const followingRef = doc(database, 'following', auth.currentUser.uid);
-        const userFollowingRef = doc(followingRef, "userFollowing", props.route.params.uid);
+        const unfollowingRef = doc(database, 'following', auth.currentUser.uid);
+        const userUnfollowingRef = doc(unfollowingRef, "userFollowing", props.route.params.uid);
 
-        deleteDoc(userFollowingRef);
+        deleteDoc(userUnfollowingRef);
     }
 
     const onLogout = () => {
@@ -88,18 +88,18 @@ function Profile(props) {
                                 onPress={() => onUnfollow()}
                             />
                         ) :
-                            (
+                        (
                                 <Button
                                     title="Follow"
                                     onPress={() => onFollow()}
                                 />
                             )}
                     </View>
-               ) :
-               <Button
-                   title="Logout"
-                   onPress={() => onLogout()}
-               />}
+                ) :
+                    <Button
+                        title="Logout"
+                        onPress={() => onLogout()}
+                    />}
             </View>
 
             <View style={styles.containerGallery}>

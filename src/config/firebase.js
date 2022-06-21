@@ -14,7 +14,7 @@ const firebaseConfig = {
   appId: Constants.manifest.extra.appId,
   databaseURL: Constants.manifest.extra.databaseURL,
   measurementId:Constants.manifest.extra.measurementId,
-  storageBucket: ''
+  
 };
 
 // initialize firebase

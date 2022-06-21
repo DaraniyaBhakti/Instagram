@@ -2,15 +2,15 @@ import React, { useState } from 'react'
 import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native'
 
 import { database } from '../../config/firebase'
-import {collection,getDoc,query,where} from 'firebase/firestore'
+import {collection,query,where,getDocs} from 'firebase/firestore'
 
 export default function Search(props) {
     const [users, setUsers] = useState([])
 
     const fetchUsers = (search) => {
-        const userRef = collection(database,"user")
-        const userQuery = query(userRef, where('name', '>=', search))
-        const userSnapshot = getDoc(userQuery);
+        const userRef = collection(database,"users")
+        const userQuery = query(userRef, where('name', '==', search))
+        const userSnapshot = getDocs(userQuery);
         userSnapshot.then((snapshot) => {
             let users = snapshot.docs.map(doc => {
                 const data = doc.data();
@@ -24,7 +24,8 @@ export default function Search(props) {
         <View>
             <TextInput
                 placeholder="Type Here..."
-                onChangeText={(search) => fetchUsers(search)} />
+                onChangeText={(search) => fetchUsers(search)}
+                 />
 
             <FlatList
                 numColumns={1}
