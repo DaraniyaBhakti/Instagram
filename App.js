@@ -12,7 +12,7 @@ import thunk from 'redux-thunk';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LandingScreen from './src/auth/LandingScreen';
+
 import RegisterScreen from './src/auth/RegisterScreen';
 import LoginScreen from './src/auth/LoginScreen';
 import MainScreen from './src/screens/MainScreen';
@@ -63,8 +63,8 @@ export class App extends Component {
     if (!loggedIn) {
       return (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Landing">
-            <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+          <Stack.Navigator initialRouteName="Login">
+           
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
           </Stack.Navigator>
@@ -75,8 +75,8 @@ export class App extends Component {
     return (
       <Provider store={store}>
         <NavigationContainer >
-          <Stack.Navigator initialRouteName="Main">
-            <Stack.Screen name="Main" component={MainScreen}/>
+          <Stack.Navigator initialRouteName="Main" >
+            <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }}/>
             <Stack.Screen name="Add" component={Add} navigation={this.props.navigation}/>
             <Stack.Screen name="Save" component={Save} navigation={this.props.navigation}/>
             <Stack.Screen name="Comment" component={Comments} navigation={this.props.navigation}/>

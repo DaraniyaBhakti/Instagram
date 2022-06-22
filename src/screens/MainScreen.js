@@ -29,18 +29,21 @@ class  MainScreen extends Component {
   render(){
   return(
     <Tab.Navigator initialRouteName="Feed" labeled={false}>
-                <Tab.Screen name="Feed" component={Feed}
+                <Tab.Screen name="Feed" component={Feed} navigation={this.props.navigation}
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="home" color={color} size={26} />
+                            
                         ),
                     }} />
+
                 <Tab.Screen name="Search" component={Search} navigation={this.props.navigation}
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="magnify" color={color} size={26} />
                         ),
                     }} />
+
                 <Tab.Screen name="AddContainer" component={EmptyScreen}
                     listeners={({ navigation }) => ({
                         tabPress: event => {

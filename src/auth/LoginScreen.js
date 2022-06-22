@@ -1,37 +1,49 @@
 import React, { useState } from 'react'
-import { View, Button, TextInput } from 'react-native'
-// import { getAuth } from 'firebase/auth';
+import { View, Button, TextInput ,Text,TouchableOpacity} from 'react-native'
+
 import { auth } from '../config/firebase';
+import { container, form } from '../styles';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-export default function LoginScreen() {
+export default function LoginScreen(props) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
 
     function onLogin(){
         signInWithEmailAndPassword(auth, email, password)
-            .then((result) =>{
-                // console.log(result) 
-            } )
-            .catch((error) => console.log(error))
     }
     return (
-        <View style={{flex:1,justifyContent:'center',alignContent:'center'}}>
-            <TextInput 
-                placeholder='email'
+        <View style={container.center}>
+        <View style={container.formCenter}>
+            <TextInput
+                style={form.textInput}
+                placeholder="Email"
                 onChangeText={(email) => setEmail(email)}
             />
-            <TextInput 
-                placeholder='password'
+            <TextInput
+                style={form.textInput}
+                placeholder="Password"
                 secureTextEntry={true}
                 onChangeText={(password) => setPassword(password)}
             />
 
-            <Button 
-                title='Login'
+            <Button
+                style={form.button}
                 onPress={() => onLogin()}
+                title="Sign In"
             />
         </View>
+
+
+        <View style={form.bottomButton} >
+            <TouchableOpacity
+                onPress={() => props.navigation.navigate("Register")} >
+                    <Text>
+                Don't have an account? SignUp.
+            </Text>
+            </TouchableOpacity>
+        </View>
+    </View>
     )
 }

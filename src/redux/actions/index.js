@@ -1,7 +1,7 @@
 import { auth, database } from '../../config/firebase'
 import { doc, getDoc, query, orderBy, collection, onSnapshot, getDocs, refEqual } from "firebase/firestore";
 
-import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USERS_DATA_STATE_CHANGE, USERS_POSTS_STATE_CHANGE, CLEAR_DATA } from '../constants/index';
+import { USER_STATE_CHANGE, USER_POSTS_STATE_CHANGE, USER_FOLLOWING_STATE_CHANGE, USERS_DATA_STATE_CHANGE, USERS_POSTS_STATE_CHANGE, CLEAR_DATA,USERS_LIKES_STATE_CHANGE } from '../constants/index';
 // import { SnapshotViewIOSComponent } from 'react-native'
 
 export function fetchUser() {
@@ -87,7 +87,6 @@ export function fetchUsersData(uid,getPosts) {
         }
     })
 }
-
 export function fetchUsersFollowingPosts(uid) {
     return ((dispatch, getState) => {
         const postRef = doc(database, "posts", uid)

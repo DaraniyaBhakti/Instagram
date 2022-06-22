@@ -4,7 +4,7 @@ import { View, Text, FlatList, Button, TextInput } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetchUsersData } from '../../redux/actions/index'
-import { database } from '../../config/firebase'
+import { auth, database } from '../../config/firebase'
 import { doc, addDoc, collection, getDocs } from 'firebase/firestore';
 
 function Comments(props) {
@@ -15,13 +15,14 @@ function Comments(props) {
     useEffect(() => {
 
         function matchUserToComment(comments) {
-            for (let i = 0; i < comments.length; i++) {
-                if (comments[i].hasOwnProperty('user')) {
+            for(let i = 0; i < comments.length; i++) {
+
+                if(comments[i].hasOwnProperty('user')) {
                     continue;
                 }
 
                 const user = props.users.find(x => x.uid === comments[i].creator)
-                if (user == undefined) {
+                if(user == undefined) {
                     props.fetchUsersData(comments[i].creator, false)
                 } else {
                     comments[i].user = user
@@ -31,7 +32,7 @@ function Comments(props) {
         }
 
 
-        if (props.route.params.postId !== postId) {
+        if(props.route.params.postId !== postId) {
             const postRef = doc(database, 'posts', props.route.params.uid);
             const userPostRef = doc(postRef, 'userPosts', props.route.params.postId)
             const commentRef = collection(userPostRef, 'comments')
@@ -59,9 +60,10 @@ function Comments(props) {
         const commentRef = collection(userPostRef, 'comments')
        
         addDoc(commentRef,{
-            creator: firebase.auth().currentUser.uid,
+            creator: auth.currentUser.uid,
             text
         })
+        console.log("comment")
     }
 
     return (
@@ -83,9 +85,9 @@ function Comments(props) {
             />
 
             <View>
-                <TextInput
-                    placeholder='comment...'
-                    onChangeText={(text) => setText(text)} />
+                <TextInput 
+                placeholder='comment'
+                onChangeText={(text) => setText(text)}/>
                 <Button
                     onPress={() => onCommentSend()}
                     title="Send"
